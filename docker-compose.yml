@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: vendor-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=vendor_app
+    networks:
+      - vendor-network
+
+  api:
+    build: .
+    container_name: vendor-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGO_URI=mongodb://mongodb:27017/vendor_app
+      - JWT_SECRET=your-super-secret-jwt-key-change-this
+      - JWT_EXPIRES_IN=15m
+      - OTP_DUMMY_MODE=true
+      - OTP_DUMMY_CODE=123456
+      - LOG_LEVEL=info
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+    networks:
+      - vendor-network
+    command: npm run dev
+
+volumes:
+  mongodb_data:
+
+networks:
+  vendor-network:
+    driver: bridge

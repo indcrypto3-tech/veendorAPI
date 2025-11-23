@@ -1,0 +1,17 @@
+.env
+node_modules
+coverage
+*.log
+.DS_Store
+src
+scripts
+tests
+*.test.js
+*.spec.js
+jest.config.js
+.gitignore
+README.md
+docker-compose.yml
+Dockerfile
+.prettierrc
+.eslintrc.js
