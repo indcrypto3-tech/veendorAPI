@@ -1,13 +1,8 @@
 import app from '../src/server.js';
 import { connectDB } from '../src/config/db.js';
 
-// Ensure database connection for serverless
-let cachedDb = null;
+// Connect to database once for serverless
+connectDB().catch(err => console.error('DB connection error:', err));
 
-export default async function handler(req, res) {
-  if (!cachedDb) {
-    cachedDb = await connectDB();
-  }
-  
-  return app(req, res);
-}
+// Export the Express app as a serverless function
+export default app;

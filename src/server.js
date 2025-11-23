@@ -102,6 +102,11 @@ if (!config.isVercel) {
     logger.error({ err }, 'Failed to connect to database');
     process.exit(1);
   });
+} else {
+  // For Vercel, connect on first request
+  connectDB().catch((err) => {
+    logger.error({ err }, 'Failed to connect to database');
+  });
 }
 
 export default app;
